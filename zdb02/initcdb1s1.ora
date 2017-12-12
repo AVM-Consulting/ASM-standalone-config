@@ -1,0 +1,5 @@
+db_name=cdb1
+db_unique_name=cdb1s1
+db_domain=sub12080721000.zvcn01.oraclevcn.com
+sga_target=2g
+pga_aggregate_target=512m
