@@ -1,0 +1,22 @@
+run {
+	allocate channel p1 type disk;
+	allocate auxiliary channel s1 type disk;
+
+	duplicate target database
+	for standby
+	from active database
+	dorecover
+	spfile
+		set     instance_name='cdb1s1'
+		set     db_unique_name='cdb1s1'
+		set     db_domain='sub12080721000.zvcn01.oraclevcn.com'
+		set     sga_target='2g'
+		set     pga_aggregate_target='512m'
+		reset 	sga_max_size
+		reset	audit_trail
+		reset	audit_file_dest
+		reset	dispatchers
+		reset	local_listener
+		reset	cluster_database
+	nofilenamecheck;
+    }
