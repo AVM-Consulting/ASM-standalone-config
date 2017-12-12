@@ -1,0 +1,367 @@
+RMAN> run {
+2>      allocate channel p1 type disk;
+3>      allocate auxiliary channel s1 type disk;
+4>
+5>      duplicate target database
+6>      for standby
+7>      from active database
+8>      dorecover
+9>      spfile
+10>             set     instance_name='cdb1s1'
+11>             set     db_unique_name='cdb1s1'
+12>             set     db_domain='sub12080721000.zvcn01.oraclevcn.com'
+13>             set     sga_target='2g'
+14>             set     pga_aggregate_target='512m'
+15>             reset   sga_max_size
+16>             reset   audit_trail
+17>             reset   audit_file_dest
+18>             reset   dispatchers
+19>             reset   local_listener
+20>             reset   cluster_database
+21>     nofilenamecheck;
+22>     }
+using target database control file instead of recovery catalog
+allocated channel: p1
+channel p1: SID=298 instance=cdb11 device type=DISK
+
+allocated channel: s1
+channel s1: SID=19 device type=DISK
+
+Starting Duplicate Db at 10-DEC-17
+current log archived
+
+contents of Memory Script:
+{
+   backup as copy reuse
+   targetfile  '+DATA/CDB1/PASSWORD/pwdcdb1.282.958553883' auxiliary format
+ '/u01/app/oracle/product/12.2.0/dbhome_1/dbs/orapwcdb1s1'   ;
+   restore clone from service  'cdb1' spfile to
+ '/u01/app/oracle/product/12.2.0/dbhome_1/dbs/spfilecdb1s1.ora';
+   sql clone "alter system set spfile= ''/u01/app/oracle/product/12.2.0/dbhome_1/dbs/spfilecdb1s1.ora''";
+}
+executing Memory Script
+
+Starting backup at 10-DEC-17
+Finished backup at 10-DEC-17
+
+Starting restore at 10-DEC-17
+
+channel s1: starting datafile backup set restore
+channel s1: using network backup set from service cdb1
+channel s1: restoring SPFILE
+output file name=/u01/app/oracle/product/12.2.0/dbhome_1/dbs/spfilecdb1s1.ora
+channel s1: restore complete, elapsed time: 00:00:07
+Finished restore at 10-DEC-17
+
+sql statement: alter system set spfile= ''/u01/app/oracle/product/12.2.0/dbhome_1/dbs/spfilecdb1s1.ora''
+
+contents of Memory Script:
+{
+   sql clone "alter system set  instance_name =
+ ''cdb1s1'' comment=
+ '''' scope=spfile";
+   sql clone "alter system set  db_unique_name =
+ ''cdb1s1'' comment=
+ '''' scope=spfile";
+   sql clone "alter system set  db_domain =
+ ''sub12080721000.zvcn01.oraclevcn.com'' comment=
+ '''' scope=spfile";
+   sql clone "alter system set  sga_target =
+ 2g comment=
+ '''' scope=spfile";
+   sql clone "alter system set  pga_aggregate_target =
+ 512m comment=
+ '''' scope=spfile";
+   sql clone "alter system reset  sga_max_size scope=spfile";
+   sql clone "alter system reset  audit_trail scope=spfile";
+   sql clone "alter system reset  audit_file_dest scope=spfile";
+   sql clone "alter system reset  dispatchers scope=spfile";
+   sql clone "alter system reset  local_listener scope=spfile";
+   sql clone "alter system reset  cluster_database scope=spfile";
+   shutdown clone immediate;
+   startup clone nomount;
+}
+executing Memory Script
+
+sql statement: alter system set  instance_name =  ''cdb1s1'' comment= '''' scope=spfile
+
+sql statement: alter system set  db_unique_name =  ''cdb1s1'' comment= '''' scope=spfile
+
+sql statement: alter system set  db_domain =  ''sub12080721000.zvcn01.oraclevcn.com'' comment= '''' scope=spfile
+
+sql statement: alter system set  sga_target =  2g comment= '''' scope=spfile
+
+sql statement: alter system set  pga_aggregate_target =  512m comment= '''' scope=spfile
+
+sql statement: alter system reset  sga_max_size scope=spfile
+
+sql statement: alter system reset  audit_trail scope=spfile
+
+sql statement: alter system reset  audit_file_dest scope=spfile
+
+sql statement: alter system reset  dispatchers scope=spfile
+
+sql statement: alter system reset  local_listener scope=spfile
+
+sql statement: alter system reset  cluster_database scope=spfile
+
+Oracle instance shut down
+
+connected to auxiliary database (not started)
+Oracle instance started
+
+Total System Global Area    2147483648 bytes
+
+Fixed Size                     8794848 bytes
+Variable Size                503319840 bytes
+Database Buffers            1627389952 bytes
+Redo Buffers                   7979008 bytes
+allocated channel: s1
+channel s1: SID=21 device type=DISK
+
+contents of Memory Script:
+{
+   sql clone "alter system set  control_files =
+  ''+DATA/CDB1S1/CONTROLFILE/current.257.962379495'', ''+DATA/CDB1S1/CONTROLFILE/current.258.962379495'' comment=
+ ''Set by RMAN'' scope=spfile";
+   restore clone from service  'cdb1' standby controlfile;
+}
+executing Memory Script
+
+sql statement: alter system set  control_files =   ''+DATA/CDB1S1/CONTROLFILE/current.257.962379495'', ''+DATA/CDB1S1/CONTROLFILE/current.258.962379495'' comment= ''Set by RMAN'' scope=spfile
+
+Starting restore at 10-DEC-17
+
+channel s1: starting datafile backup set restore
+channel s1: using network backup set from service cdb1
+channel s1: restoring control file
+channel s1: restore complete, elapsed time: 00:00:19
+output file name=+DATA/CDB1S1/CONTROLFILE/current.261.962379513
+output file name=+DATA/CDB1S1/CONTROLFILE/current.262.962379523
+Finished restore at 10-DEC-17
+
+contents of Memory Script:
+{
+   sql clone 'alter database mount standby database';
+}
+executing Memory Script
+
+sql statement: alter database mount standby database
+
+contents of Memory Script:
+{
+   set newname for clone tempfile  1 to new;
+   set newname for clone tempfile  2 to new;
+   set newname for clone tempfile  3 to new;
+   switch clone tempfile all;
+   set newname for clone datafile  1 to new;
+   set newname for clone datafile  3 to new;
+   set newname for clone datafile  4 to new;
+   set newname for clone datafile  5 to new;
+   set newname for clone datafile  6 to new;
+   set newname for clone datafile  7 to new;
+   set newname for clone datafile  8 to new;
+   set newname for clone datafile  9 to new;
+   set newname for clone datafile  10 to new;
+   set newname for clone datafile  11 to new;
+   set newname for clone datafile  12 to new;
+   set newname for clone datafile  13 to new;
+   set newname for clone datafile  14 to new;
+   restore
+   from  nonsparse   from service
+ 'cdb1'   clone database
+   ;
+   sql 'alter system archive log current';
+}
+executing Memory Script
+
+executing command: SET NEWNAME
+
+executing command: SET NEWNAME
+
+executing command: SET NEWNAME
+
+renamed tempfile 1 to +DATA in control file
+renamed tempfile 2 to +DATA in control file
+renamed tempfile 3 to +DATA in control file
+
+executing command: SET NEWNAME
+
+executing command: SET NEWNAME
+
+executing command: SET NEWNAME
+
+executing command: SET NEWNAME
+
+executing command: SET NEWNAME
+
+executing command: SET NEWNAME
+
+executing command: SET NEWNAME
+
+executing command: SET NEWNAME
+
+executing command: SET NEWNAME
+
+executing command: SET NEWNAME
+
+executing command: SET NEWNAME
+
+executing command: SET NEWNAME
+
+executing command: SET NEWNAME
+
+Starting restore at 10-DEC-17
+
+channel s1: starting datafile backup set restore
+channel s1: using network backup set from service cdb1
+channel s1: specifying datafile(s) to restore from backup set
+channel s1: restoring datafile 00001 to +DATA
+channel s1: restore complete, elapsed time: 00:03:48
+channel s1: starting datafile backup set restore
+channel s1: using network backup set from service cdb1
+channel s1: specifying datafile(s) to restore from backup set
+channel s1: restoring datafile 00003 to +DATA
+channel s1: restore complete, elapsed time: 00:02:53
+channel s1: starting datafile backup set restore
+channel s1: using network backup set from service cdb1
+channel s1: specifying datafile(s) to restore from backup set
+channel s1: restoring datafile 00004 to +DATA
+channel s1: restore complete, elapsed time: 00:00:11
+channel s1: starting datafile backup set restore
+channel s1: using network backup set from service cdb1
+channel s1: specifying datafile(s) to restore from backup set
+channel s1: restoring datafile 00005 to +DATA
+channel s1: restore complete, elapsed time: 00:01:24
+channel s1: starting datafile backup set restore
+channel s1: using network backup set from service cdb1
+channel s1: specifying datafile(s) to restore from backup set
+channel s1: restoring datafile 00006 to +DATA
+channel s1: restore complete, elapsed time: 00:01:48
+channel s1: starting datafile backup set restore
+channel s1: using network backup set from service cdb1
+channel s1: specifying datafile(s) to restore from backup set
+channel s1: restoring datafile 00007 to +DATA
+channel s1: restore complete, elapsed time: 00:00:12
+channel s1: starting datafile backup set restore
+channel s1: using network backup set from service cdb1
+channel s1: specifying datafile(s) to restore from backup set
+channel s1: restoring datafile 00008 to +DATA
+channel s1: restore complete, elapsed time: 00:00:31
+channel s1: starting datafile backup set restore
+channel s1: using network backup set from service cdb1
+channel s1: specifying datafile(s) to restore from backup set
+channel s1: restoring datafile 00009 to +DATA
+channel s1: restore complete, elapsed time: 00:00:11
+channel s1: starting datafile backup set restore
+channel s1: using network backup set from service cdb1
+channel s1: specifying datafile(s) to restore from backup set
+channel s1: restoring datafile 00010 to +DATA
+channel s1: restore complete, elapsed time: 00:01:18
+channel s1: starting datafile backup set restore
+channel s1: using network backup set from service cdb1
+channel s1: specifying datafile(s) to restore from backup set
+channel s1: restoring datafile 00011 to +DATA
+channel s1: restore complete, elapsed time: 00:01:49
+channel s1: starting datafile backup set restore
+channel s1: using network backup set from service cdb1
+channel s1: specifying datafile(s) to restore from backup set
+channel s1: restoring datafile 00012 to +DATA
+channel s1: restore complete, elapsed time: 00:00:11
+channel s1: starting datafile backup set restore
+channel s1: using network backup set from service cdb1
+channel s1: specifying datafile(s) to restore from backup set
+channel s1: restoring datafile 00013 to +DATA
+channel s1: restore complete, elapsed time: 00:00:11
+channel s1: starting datafile backup set restore
+channel s1: using network backup set from service cdb1
+channel s1: specifying datafile(s) to restore from backup set
+channel s1: restoring datafile 00014 to +DATA
+channel s1: restore complete, elapsed time: 00:00:11
+Finished restore at 10-DEC-17
+
+sql statement: alter system archive log current
+current log archived
+
+contents of Memory Script:
+{
+   restore clone force from service  'cdb1'
+           archivelog from scn  4069136;
+   switch clone datafile all;
+}
+executing Memory Script
+
+Starting restore at 10-DEC-17
+
+channel s1: starting archived log restore to default destination
+channel s1: using network backup set from service cdb1
+channel s1: restoring archived log
+archived log thread=1 sequence=36
+channel s1: restore complete, elapsed time: 00:00:10
+channel s1: starting archived log restore to default destination
+channel s1: using network backup set from service cdb1
+channel s1: restoring archived log
+archived log thread=1 sequence=37
+channel s1: restore complete, elapsed time: 00:00:08
+Finished restore at 10-DEC-17
+
+datafile 1 switched to datafile copy
+input datafile copy RECID=17 STAMP=962380494 file name=+DATA/CDB1S1/DATAFILE/system.263.962379581
+datafile 3 switched to datafile copy
+input datafile copy RECID=18 STAMP=962380494 file name=+DATA/CDB1S1/DATAFILE/sysaux.264.962379813
+datafile 4 switched to datafile copy
+input datafile copy RECID=19 STAMP=962380494 file name=+DATA/CDB1S1/DATAFILE/undotbs1.265.962379983
+datafile 5 switched to datafile copy
+input datafile copy RECID=20 STAMP=962380494 file name=+DATA/CDB1S1/5C9C059FFBB52657E0536501A8C0BFA4/DATAFILE/system.266.962380001
+datafile 6 switched to datafile copy
+input datafile copy RECID=21 STAMP=962380494 file name=+DATA/CDB1S1/5C9C059FFBB52657E0536501A8C0BFA4/DATAFILE/sysaux.267.962380081
+datafile 7 switched to datafile copy
+input datafile copy RECID=22 STAMP=962380494 file name=+DATA/CDB1S1/DATAFILE/users.268.962380189
+datafile 8 switched to datafile copy
+input datafile copy RECID=23 STAMP=962380494 file name=+DATA/CDB1S1/5C9C059FFBB52657E0536501A8C0BFA4/DATAFILE/undotbs1.269.962380203
+datafile 9 switched to datafile copy
+input datafile copy RECID=24 STAMP=962380495 file name=+DATA/CDB1S1/DATAFILE/undotbs2.270.962380233
+datafile 10 switched to datafile copy
+input datafile copy RECID=25 STAMP=962380495 file name=+DATA/CDB1S1/5C9C2F5BAE016BFAE0536601A8C03225/DATAFILE/system.271.962380245
+datafile 11 switched to datafile copy
+input datafile copy RECID=26 STAMP=962380495 file name=+DATA/CDB1S1/5C9C2F5BAE016BFAE0536601A8C03225/DATAFILE/sysaux.272.962380323
+datafile 12 switched to datafile copy
+input datafile copy RECID=27 STAMP=962380495 file name=+DATA/CDB1S1/5C9C2F5BAE016BFAE0536601A8C03225/DATAFILE/undotbs1.273.962380433
+datafile 13 switched to datafile copy
+input datafile copy RECID=28 STAMP=962380495 file name=+DATA/CDB1S1/5C9C2F5BAE016BFAE0536601A8C03225/DATAFILE/undo_2.274.962380445
+datafile 14 switched to datafile copy
+input datafile copy RECID=29 STAMP=962380495 file name=+DATA/CDB1S1/5C9C2F5BAE016BFAE0536601A8C03225/DATAFILE/users.275.962380455
+
+contents of Memory Script:
+{
+   set until scn  4071187;
+   recover
+   standby
+   clone database
+    delete archivelog
+   ;
+}
+executing Memory Script
+
+executing command: SET until clause
+
+Starting recover at 10-DEC-17
+
+starting media recovery
+
+archived log for thread 1 with sequence 36 is already on disk as file +DATA/CDB1S1/ARCHIVELOG/2017_12_10/thread_1_seq_36.276.962380479
+archived log for thread 1 with sequence 37 is already on disk as file +DATA/CDB1S1/ARCHIVELOG/2017_12_10/thread_1_seq_37.277.962380491
+archived log file name=+DATA/CDB1S1/ARCHIVELOG/2017_12_10/thread_1_seq_36.276.962380479 thread=1 sequence=36
+archived log file name=+DATA/CDB1S1/ARCHIVELOG/2017_12_10/thread_1_seq_37.277.962380491 thread=1 sequence=37
+media recovery complete, elapsed time: 00:00:01
+Finished recover at 10-DEC-17
+Finished Duplicate Db at 10-DEC-17
+released channel: p1
+released channel: s1
+
+RMAN> **end-of-file**
+
+RMAN> exit
+
+
+Recovery Manager complete.
